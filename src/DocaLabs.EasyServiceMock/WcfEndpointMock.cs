@@ -8,9 +8,16 @@ namespace DocaLabs.EasyServiceMock
 {
     public class WcfEndpointMock : EndpointMockBase
     {
+        public T FromJson<T>(string contentType, params string[] correlationValues) where T : class
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+            return FromJson<T>(Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues));
+        }
+
         public Stream Reply(string contentType, params string[] correlationValues)
         {
             var methodInfo = new StackFrame(1).GetMethod();
+
             return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
         }
 
@@ -22,6 +29,8 @@ namespace DocaLabs.EasyServiceMock
                 SetError("There is no correlation key.", HttpStatusCode.BadRequest);
                 return null;
             }
+
+            RecordCall(correlationKey, method);
 
             var status = TryGetError(correlationKey);
             if (status != HttpStatusCode.OK)
@@ -54,6 +63,33 @@ namespace DocaLabs.EasyServiceMock
             SetError(string.Format("Key: '{0}', Error: '{1}'", correlationKey, data.ProposedDescription), data.ProposedStatus);
             
             return null;
+        }
+
+        public Stream StoreAndReply(Stream data, string contentType, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupResponse(data, correlationValues);
+
+            return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
+        }
+
+        public Stream StoreAndReply(string data, string contentType, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupResponse(data, correlationValues);
+
+            return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
+        }
+
+        public Stream StoreJsonAndReply(object data, string contentType, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupJsonResponse(data, correlationValues);
+
+            return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
         }
 
         static void SetError(string description, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)

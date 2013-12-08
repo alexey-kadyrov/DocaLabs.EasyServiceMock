@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,6 +20,8 @@ namespace DocaLabs.EasyServiceMock
             var correlationKey = MakeCorrelationKey(correlationValues);
             if(string.IsNullOrWhiteSpace(correlationKey))
                 return SetError("There is no correlation key.", HttpStatusCode.BadRequest);
+
+            RecordCall(correlationKey, method);
 
             var status = TryGetError(correlationKey);
             if (status != HttpStatusCode.OK)
@@ -48,6 +51,33 @@ namespace DocaLabs.EasyServiceMock
             responseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
             return responseMessage;
+        }
+
+        public HttpResponseMessage StoreAndReply(Stream data, string contentType, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupResponse(data, correlationValues);
+
+            return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
+        }
+
+        public HttpResponseMessage StoreAndReply(string data, string contentType, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupResponse(data, correlationValues);
+
+            return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
+        }
+
+        public HttpResponseMessage StoreJsonAndReply(object data, string contentType, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupJsonResponse(data, correlationValues);
+
+            return Reply(methodInfo.DeclaringType, methodInfo.Name, contentType, correlationValues);
         }
 
         static HttpResponseMessage SetError(string description, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)

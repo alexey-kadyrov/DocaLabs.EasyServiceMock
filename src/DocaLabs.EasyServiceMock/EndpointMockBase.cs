@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,34 @@ namespace DocaLabs.EasyServiceMock
     {
         readonly ConcurrentDictionary<string, byte[]> _responses = new ConcurrentDictionary<string, byte[]>();
         readonly ConcurrentDictionary<string, HttpStatusCode> _errors = new ConcurrentDictionary<string, HttpStatusCode>();
+        readonly ConcurrentDictionary<string, string> _recordedCalls = new ConcurrentDictionary<string, string>();
+
+        public void Store(Stream data, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupResponse(data, correlationValues);
+
+            RecordCall(MakeCorrelationKey(correlationValues), methodInfo.Name);
+        }
+
+        public void Store(string data, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupResponse(data, correlationValues);
+
+            RecordCall(MakeCorrelationKey(correlationValues), methodInfo.Name);
+        }
+
+        public void StoreJson(object data, params string[] correlationValues)
+        {
+            var methodInfo = new StackFrame(1).GetMethod();
+
+            SetupJsonResponse(data, correlationValues);
+
+            RecordCall(MakeCorrelationKey(correlationValues), methodInfo.Name);
+        }
 
         public void SetupResponse(Stream data, params string[] correlationValues)
         {
@@ -83,6 +112,11 @@ namespace DocaLabs.EasyServiceMock
             {
                 return new JsonSerializer().Deserialize<T>(reader);
             }
+        }
+
+        protected void RecordCall(string correlationKey, string method)
+        {
+            _recordedCalls[correlationKey] = method;
         }
 
         protected virtual string MakeCorrelationKey(params string[] correlationValues)

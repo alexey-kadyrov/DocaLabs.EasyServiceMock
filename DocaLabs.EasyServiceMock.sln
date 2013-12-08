@@ -12,6 +12,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{514AB3
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{DF107D1C-E19F-4498-9F12-85CCFA9F02F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocaLabs.EasyServcieMock.WcfMock", "examples\DocaLabs.EasyServcieMock.WcfMock\DocaLabs.EasyServcieMock.WcfMock.csproj", "{BD17BB49-1D16-4063-88AE-ED855D233126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocaLabs.EasyServcieMock.WebApiMock", "examples\DocaLabs.EasyServcieMock.WebApiMock\DocaLabs.EasyServcieMock.WebApiMock.csproj", "{0310DA60-A40E-4C51-A077-D10AD821EF72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,8 +28,20 @@ Global
 		{05E4F033-F4ED-4F51-9A21-2C3832224109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05E4F033-F4ED-4F51-9A21-2C3832224109}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05E4F033-F4ED-4F51-9A21-2C3832224109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD17BB49-1D16-4063-88AE-ED855D233126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD17BB49-1D16-4063-88AE-ED855D233126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD17BB49-1D16-4063-88AE-ED855D233126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD17BB49-1D16-4063-88AE-ED855D233126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0310DA60-A40E-4C51-A077-D10AD821EF72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0310DA60-A40E-4C51-A077-D10AD821EF72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0310DA60-A40E-4C51-A077-D10AD821EF72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0310DA60-A40E-4C51-A077-D10AD821EF72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD17BB49-1D16-4063-88AE-ED855D233126} = {DF107D1C-E19F-4498-9F12-85CCFA9F02F1}
+		{0310DA60-A40E-4C51-A077-D10AD821EF72} = {DF107D1C-E19F-4498-9F12-85CCFA9F02F1}
 	EndGlobalSection
 EndGlobal
